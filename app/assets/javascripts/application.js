@@ -18,29 +18,35 @@
 //= require_tree .
 
 $( function() {
+  function taskHtml(task) {
+    var checkedStatus = task.done ? "checked " : "";
+    var liElement = '<li><div class="view"><input class="toggle" type="checkbox" data-id="' +
+      task.id + '" ' +
+      checkedStatus +
+      '><label>' +
+      task.title +
+      '</label></div></li>';
+
+    return liElement;
+  }
+
+  function toggleTask(e) {
+    var itemId = $(e.target).data("id");
+    var doneValue = Boolean($(e.target).is(':checked'));
+
+    $.post("/tasks/" + itemId, {
+      _method: "PUT",
+      task: {
+        done: doneValue
+      }
+    });
+  }
+
   $.get("/tasks").success( function( data ) {
     $.each(data, function(index, task) {
-      var checkedStatus = task.done ? "checked " : "";
-      var liElement = '<li><div class="view"><input class="toggle" type="checkbox" data-id="' +
-        task.id + '" ' +
-        checkedStatus +
-        '><label>' +
-        task.title +
-        '</label></div></li>';
-
-      $( '.todo-list' ).append(liElement);
-
-      $( '.toggle' ).change( function( e ) {
-        var itemId = $(e.target).data("id");
-        var doneValue = Boolean($(e.target).is(':checked'));
-
-        $.post("/tasks/" + itemId, {
-          _method: "PUT",
-          task: {
-            done: doneValue
-          }
-        });
-      });
+      $( '.todo-list' ).append(taskHtml(task));
     });
+
+    $( '.toggle' ).change(toggleTask);
   });
 });
