@@ -20,7 +20,10 @@
 $( function() {
   $.get("/tasks").success( function( data ) {
     $.each(data, function(index, task) {
-      var liElement = '<li><div class="view"><input class="toggle" type="checkbox"><label>' +
+      var checkedStatus = task.done ? "checked" : "";
+      var liElement = '<li><div class="view"><input class="toggle" type="checkbox"' +
+        checkedStatus +
+        '><label>' +
         task.title +
         '</label></div></li>';
         $( '.todo-list' ).append(liElement);
