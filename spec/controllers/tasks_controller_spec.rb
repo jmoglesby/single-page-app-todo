@@ -28,12 +28,20 @@ RSpec.describe TasksController, type: :controller do
       task = FactoryBot.create(:task)
 
       put :update, params: { id: task.id, task: { done: true } }
-
-      expect(response).to have_http_status(:success)
-
       task.reload
 
+      expect(response).to have_http_status(:success)
       expect(task.done).to eq(true)
+    end
+
+    it 'should allow tasks to be marked as archived' do
+      task = FactoryBot.create(:task)
+
+      put :update, params: { id: task.id, task: { archived: true } }
+      task.reload
+
+      expect(response).to have_http_status(:success)
+      expect(task.archived).to eq(true)
     end
   end
 

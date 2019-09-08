@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
   def index
-    render json: Task.all.order(:id)
+    render json: Task.where({ archived: false }).order(:id)
   end
 
   def create
@@ -17,6 +17,6 @@ class TasksController < ApplicationController
   private # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
   def task_params
-    params.require(:task).permit(:title, :done)
+    params.require(:task).permit(:title, :done, :archived)
   end
 end

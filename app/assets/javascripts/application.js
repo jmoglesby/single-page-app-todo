@@ -35,6 +35,8 @@ $( function() {
     });
   });
 
+  $( '.clear-completed' ).click(archiveCompleted);
+
   function taskHtml(task) {
     var checkedStatus = task.done ? "checked " : "";
     var liClass = task.done ? "completed" : "";
@@ -63,6 +65,20 @@ $( function() {
       var $li = $( "#listItem-" + data.id );
       $li.replaceWith(liHtml);
       $( '.toggle' ).change(toggleTask);
+    });
+  }
+
+  function archiveCompleted() {
+    $( '.completed' ).each( function() {
+      var id = $( this )[0].id;
+      $.post("/tasks/" + id.slice(9), {
+        _method: "PUT",
+        task: {
+          archived: true
+        }
+      }).success( function(data) {
+        $( "#listItem-" + data.id ).remove();
+      });
     });
   }
 
