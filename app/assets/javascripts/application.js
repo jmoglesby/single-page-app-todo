@@ -18,6 +18,23 @@
 //= require_tree .
 
 $( function() {
+  fetchTasks();
+
+  $( '#new-form' ).submit( function(event) {
+    event.preventDefault();
+    var textbox = $( '.new-todo' );
+    var payload = {
+      task: {
+        title: textbox.val()
+      }
+    };
+
+    $.post("/tasks", payload).success( function() {
+      textbox.val('');
+      fetchTasks();
+    });
+  });
+
   function taskHtml(task) {
     var checkedStatus = task.done ? "checked " : "";
     var liElement = '<li><div class="view"><input class="toggle" type="checkbox" data-id="' +
@@ -42,11 +59,16 @@ $( function() {
     });
   }
 
-  $.get("/tasks").success( function( data ) {
-    $.each(data, function(index, task) {
-      $( '.todo-list' ).append(taskHtml(task));
-    });
+  function fetchTasks() {
+    $.get("/tasks").success( function( data ) {
+      var html = '';
 
-    $( '.toggle' ).change(toggleTask);
-  });
+      $.each(data, function(index, task) {
+        html += taskHtml(task);
+      });
+
+      $( '.todo-list' ).html(html);
+      $( '.toggle' ).change(toggleTask);
+    });
+  }
 });
