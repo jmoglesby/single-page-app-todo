@@ -6,11 +6,20 @@ RSpec.describe TasksController, type: :controller do
       task1 = FactoryBot.create(:task)
       task2 = FactoryBot.create(:task)
 
+      task1.update_attributes(title: 'Something else')
       get :index
       response_value = ActiveSupport::JSON.decode(@response.body)
 
       expect(response).to have_http_status(:success)
       expect(response_value.count).to eq(2)
+
+      # I feel like the following should be its own test:
+      # it 'should return tasks in the order they were created' do...
+      response_ids = response_value.map do |task|
+        task['id']
+      end
+
+      expect(response_ids).to eq([task1.id, task2.id])
     end
   end
 
