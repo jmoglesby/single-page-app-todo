@@ -29,8 +29,4 @@ $( function() {
         $( '.todo-list' ).append(liElement);
     });
   });
-
-  // $( '.toggle' ).click( function() {
-
-  // });
 });
