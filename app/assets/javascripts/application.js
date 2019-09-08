@@ -12,5 +12,22 @@
 //
 //= require rails-ujs
 //= require activestorage
+//= require jquery
+//= require jquery_ujs
 //= require turbolinks
 //= require_tree .
+
+$( function() {
+  $.get("/tasks").success( function( data ) {
+    $.each(data, function(index, task) {
+      var liElement = '<li><div class="view"><input class="toggle" type="checkbox"><label>' +
+        task.title +
+        '</label></div></li>';
+        $( '.todo-list' ).append(liElement);
+    });
+  });
+
+  // $( '.toggle' ).click( function() {
+
+  // });
+});
